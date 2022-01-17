@@ -8,6 +8,12 @@
 import Foundation
 
 internal class RSAHelper {
+    
+    /// Encrypt the given String with RSA algorithm
+    /// - Parameters:
+    ///     - apiKey:  String to be encrypted
+    ///     - publicKey: Public key to encrypt
+    /// - Returns: Encrypted String (token)
     @available(macOS 10.12, *)
     static func encrypt(apiKey: String, publicKey: RSAPublicKey) -> String {
         var error: Unmanaged<CFError>?
