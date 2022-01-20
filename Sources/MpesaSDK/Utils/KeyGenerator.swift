@@ -14,13 +14,7 @@ internal class KeyGenerator {
         
         let publicKey = RSAPublicKey(pemEncoded: config.publicKey!)
         
-        if #available(macOS 10.12, *) {
-            let token = RSAHelper.encrypt(apiKey: config.apiKey!, publicKey: publicKey)
-            return "Bearer \(token)"
-        } else {
-            // Fallback on earlier versions
-        }
-        
-        return nil
+        let token = RSAHelper.encrypt(apiKey: config.apiKey!, publicKey: publicKey)
+        return "Bearer \(token)"
     }
 }

@@ -28,11 +28,7 @@ internal class RSAPublicKey {
         var error: Unmanaged<CFError>?
         var key: SecKey? = nil
         
-        if #available(macOS 10.12, *) {
-            key = SecKeyCreateWithData(keyData as CFData, keyDict as CFDictionary, &error)
-        } else {
-            // Fallback on earlier versions
-        }
+        key = SecKeyCreateWithData(keyData as CFData, keyDict as CFDictionary, &error)
         
         return key!
     }
