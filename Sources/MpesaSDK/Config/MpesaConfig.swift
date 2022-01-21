@@ -8,13 +8,13 @@
 import Foundation
 
 class MpesaConfig {
-    let apiHost  : String?
-    let apiKey   : String?
-    let publicKey: String?
+    let apiAddress  : String?
+    let apiKey      : String?
+    let publicKey   : String?
     
-    init(apiHost: String, apiKey: String, publicKey: String) {
-        self.apiHost   = apiHost
-        self.apiKey    = apiKey
-        self.publicKey = publicKey
+    init(apiAddress: String, apiKey: String, publicKey: String) {
+        self.apiAddress = apiAddress
+        self.apiKey     = apiKey
+        self.publicKey  = publicKey
     }
 }
