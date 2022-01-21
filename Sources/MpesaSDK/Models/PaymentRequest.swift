@@ -14,12 +14,12 @@ import Foundation
 /// @thirdPartyReference: This is the unique reference of the third party system. When there are queries about transactions, this will usually be used to track a transaction
 /// @serviceProviderCode: Shortcode of the business where funds will be credited to
 
-public struct PaymentRequest: Encodable {
-    public let transactionReference: String
-    public let customerMSISDN      : String
-    public let amount              : String
-    public let thirdPartyReference : String
-    public let serviceProviderCode : String
+open struct PaymentRequest: Encodable {
+    let transactionReference: String
+    let customerMSISDN      : String
+    let amount              : String
+    let thirdPartyReference : String
+    let serviceProviderCode : String
     
     enum CodingKeys: String, CodingKey {
         case transactionReference = "input_TransactionReference"
