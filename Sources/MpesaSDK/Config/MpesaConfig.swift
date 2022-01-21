@@ -12,7 +12,7 @@ public class MpesaConfig {
     let apiKey      : String?
     let publicKey   : String?
     
-    init(apiAddress: String, apiKey: String, publicKey: String) {
+    public init(apiAddress: String, apiKey: String, publicKey: String) {
         self.apiAddress = apiAddress
         self.apiKey     = apiKey
         self.publicKey  = publicKey

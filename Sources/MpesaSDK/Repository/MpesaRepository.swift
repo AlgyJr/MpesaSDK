@@ -10,7 +10,7 @@ import Foundation
 public class MpesaRepository: MpesaService {
     let config: MpesaConfig
     
-    init(config: MpesaConfig) {
+    public init(config: MpesaConfig) {
         self.config = config
     }
     
