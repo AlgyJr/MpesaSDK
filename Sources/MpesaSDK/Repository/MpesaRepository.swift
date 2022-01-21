@@ -7,7 +7,7 @@
 
 import Foundation
 
-class MpesaRepository: MpesaService {
+public class MpesaRepository: MpesaService {
     let config: MpesaConfig
     
     init(config: MpesaConfig) {

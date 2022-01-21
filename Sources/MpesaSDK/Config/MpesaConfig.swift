@@ -7,7 +7,7 @@
 
 import Foundation
 
-class MpesaConfig {
+public class MpesaConfig {
     let apiAddress  : String?
     let apiKey      : String?
     let publicKey   : String?

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum MpesaError: String, Error {
+public enum MpesaError: String, Error {
     case invalidApiAddress = "Invalid API Address"
     case invalidURL        = "Invalid URL"
     case invalidToken      = "API Key or Public Key incorrect"
