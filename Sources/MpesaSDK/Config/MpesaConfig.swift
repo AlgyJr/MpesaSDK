@@ -8,9 +8,9 @@
 import Foundation
 
 public class MpesaConfig {
-    let apiAddress  : String?
-    let apiKey      : String?
-    let publicKey   : String?
+    let apiAddress  : String
+    let apiKey      : String
+    let publicKey   : String
     
     public init(apiAddress: String, apiKey: String, publicKey: String) {
         self.apiAddress = apiAddress
