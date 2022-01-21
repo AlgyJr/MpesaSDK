@@ -5,7 +5,7 @@ Swift package for M-Pesa API (Mozambique)
 
 Ready Methods/APIs
 
-- [ ] C2B
+- [x] C2B
 - [ ] B2B
 - [ ] B2C
 - [ ] TRANSACTION STATUS
@@ -18,6 +18,77 @@ Ready Methods/APIs
 These keys will be used to generate your access token.
 
 PS: You can get these keys getting an account on the Vodacom Mozambique M-Pesa [website](https://developer.mpesa.vm.co.mz/)
+## Usage
+
+Add a Swift package to your project:
+
+1. on Xcode, go to File -> Add Packages...
+2. paste the package repository URL (https://github.com/Algy-Jr12/MpesaSDK) into Search Bar
+3. Next next next :) and enjoy
+
+Import in your [iOS/macOS/watchOS/tvOS] or plain Swift app.
+
+```swift
+import MpesaSDK
+```
+
+#### Create an M-pesa service
+```swift
+let config = MpesaConfig(apiAddress: apiAddress, apiKey: apiKey, publicKey: publicKey)
+let service = MpesaRepository(config: config)
+```
+### C2B API Call
+
+##### Create a payment request
+```swift
+let paymentRequest = PaymentRequest(
+  transactionReference: "transactionReference",
+  customerMSISDN: "25884*******",
+  amount: "amount",
+  thirdPartyReference: "thirdPartyReference",
+  serviceProviderCode: "serviceProviderCode"
+)
+```
+
+##### Perform the network call
+
+```swift
+service.c2bPayment(paymentRequest: paymentRequest) { result in
+  // TODO handle response
+}
+```
+
+##### Handle the response
+
+```swift
+service.c2bPayment(paymentRequest: paymentRequest) { result in
+    switch result {
+        case .success(let paymentResponse):
+            let responseCode = paymentResponse.responseCode
+            print(responseCode)
+            // Do something depending on the response code
+
+            print(paymentResponse.responseDesc)
+        case .failure(let error):
+            // Do something depending on the error
+            switch error {
+                case MpesaError.invalidToken:
+                    print(MpesaError.invalidToken.rawValue)
+                    // OR your message
+                    print("API Key or Public Key incorrect")
+                case MpesaError.invalidURL:
+                    print(MpesaError.invalidURL.rawValue)
+                    // OR your message
+                    print("Invalid URL")
+                default:
+                    print("Request failed with error: \(error.localizedDescription)")
+            }
+    }
+}
+```
+## Example/Screenshots :camera_flash:
+ASAP...
+
 ## License
 
 ```
