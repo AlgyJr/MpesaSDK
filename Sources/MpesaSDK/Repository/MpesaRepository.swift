@@ -18,12 +18,8 @@ public class MpesaRepository: MpesaService {
     /// - Parameters:
     ///     - paymentRequest: transaction payment request object
     public func c2bPayment(paymentRequest: PaymentRequest, completion: @escaping (Result<PaymentResponse, Error>) -> Void) {
-        // unwrap apiAddress
-        guard let apiAddress = config.apiAddress else {
-            NSLog("API Address should not be nil")
-            completion(.failure(MpesaError.invalidApiAddress))
-            return
-        }
+        let apiAddress = config.apiAddress
+        
         
         // Create URL
         guard let url = URL(string: "https://\(apiAddress):18352/ipg/v1x/c2bPayment/singleStage/") else {
