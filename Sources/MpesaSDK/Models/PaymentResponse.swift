@@ -15,11 +15,11 @@ import Foundation
 /// @thirdPartyReference: This is the reference of the third party system. When there are queries about transactions, this will usually be used to track a transaction
 
 public struct PaymentResponse: Decodable {
-    let responseCode       : String
-    let responseDesc       : String
-    let transactionID      : String?
-    let conversactionID    : String?
-    let thirdPartyReference: String
+    public let responseCode       : String
+    public let responseDesc       : String
+    public let transactionID      : String?
+    public let conversactionID    : String?
+    public let thirdPartyReference: String
     
     public init(responseCode: String, responseDesc: String, transactionID: String?, conversactionID: String?, thirdPartyReference: String) {
         self.responseCode        = responseCode

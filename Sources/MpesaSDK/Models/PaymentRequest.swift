@@ -15,11 +15,11 @@ import Foundation
 /// @serviceProviderCode: Shortcode of the business where funds will be credited to
 
 public struct PaymentRequest: Encodable {
-    let transactionReference: String
-    let customerMSISDN      : String
-    let amount              : String
-    let thirdPartyReference : String
-    let serviceProviderCode : String
+    public let transactionReference: String
+    public let customerMSISDN      : String
+    public let amount              : String
+    public let thirdPartyReference : String
+    public let serviceProviderCode : String
     
     public init(transactionReference: String, customerMSISDN: String, amount: String, thirdPartyReference : String, serviceProviderCode : String) {
         self.transactionReference = transactionReference
