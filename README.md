@@ -1,3 +1,5 @@
+![Platform iOS | macOS | watchOS | tvOS](https://img.shields.io/badge/platform-iOS%20%7C%20macOS%20%7C%20watchOS%20%7C%20tvOS-informational.svg)
+![GitHub](https://img.shields.io/github/license/Algy-Jr12/MpesaSDK?color=orange)
 
 # M-Pesa SDK
 
