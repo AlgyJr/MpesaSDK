@@ -26,6 +26,12 @@ Add a Swift package to your project:
 2. paste the package repository URL (https://github.com/Algy-Jr12/MpesaSDK) into Search Bar
 3. Next next next :) and enjoy
 
+Supported versions:
+- iOS 10.0
+- macOS 10.12
+- watchOS 3.0
+- tvOS 10.0
+
 Import in your [iOS/macOS/watchOS/tvOS] or plain Swift app.
 
 ```swift
@@ -87,7 +93,18 @@ service.c2bPayment(paymentRequest: paymentRequest) { result in
 }
 ```
 ## Example/Screenshots :camera_flash:
-ASAP...
+
+### Make Payment
+<img src="/Documentation/Screenshots/make_payment.png" width="270" alt="Make Payment Screen"/>
+
+### Processing Payment
+<img src="/Documentation/Screenshots/processing_payment.png" width="270" alt="Processing Payment Screen"/>
+
+### Payment Failure
+<img src="/Documentation/Screenshots/payment_failed.png" width="270" alt="Payment Failure Screen"/>
+
+### Payment Success
+<img src="/Documentation/Screenshots/payment_success.png" width="270" alt="Payment Success Screen"/>
 
 ## License
 
