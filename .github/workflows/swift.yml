@@ -1,4 +1,4 @@
-name: Package CI
+name: Build
 
 on:
   push:
