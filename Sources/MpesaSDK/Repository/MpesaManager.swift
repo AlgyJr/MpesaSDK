@@ -1,5 +1,5 @@
 //
-//  MpesaRepository.swift
+//  MpesaManager.swift
 //  
 //
 //  Created by ALgy Aly on 15/01/22.
@@ -29,11 +29,21 @@
 
 import Foundation
 
-public class MpesaRepository: MpesaService {
-    let config: MpesaConfig
+public class MpesaManager: MpesaService {
+    private let config        : MpesaConfig
+    private let networkManager: NetworkManager
+    private let keyGenerator  : KeyGenerator
+    
+    init(config: MpesaConfig, networkManager: NetworkManager = NetworkManager(), keyGenerator: KeyGenerator = KeyGeneratorImp()) {
+        self.config         = config
+        self.networkManager = networkManager
+        self.keyGenerator   = keyGenerator
+    }
     
     public init(config: MpesaConfig) {
-        self.config = config
+        self.config         = config
+        self.networkManager = NetworkManager()
+        self.keyGenerator   = KeyGeneratorImp()
     }
     
     /// The C2B API Call is used as a standard customer-to-business transaction. Funds from the customer’s mobile money wallet will be deducted and be transferred to the mobile money wallet of the business. To authenticate and authorize this transaction, M-Pesa Payments Gateway will initiate a USSD Push message to the customer to gather and verify the mobile money PIN number. This number is not stored and is used only to authorize the transaction.
@@ -42,18 +52,17 @@ public class MpesaRepository: MpesaService {
     public func c2bPayment(paymentRequest: PaymentRequest, completion: @escaping (Result<PaymentResponse, Error>) -> Void) {
         let apiAddress = config.apiAddress
         
-        
         // Create URL
         guard let url = URL(string: "https://\(apiAddress):18352/ipg/v1x/c2bPayment/singleStage/") else {
-            NSLog("Error generating URL")
+            NSLog(MpesaError.invalidURL.rawValue)
             completion(.failure(MpesaError.invalidURL))
             return
         }
         
-        var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 90000)
+        var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 90)
         
         // Generate token
-        guard let token = try? KeyGenerator().generateBearerToken(config: config) else {
+        guard let token = try? keyGenerator.generateBearerToken(publicKey: config.publicKey, apiKey: config.apiKey) else {
             NSLog(MpesaError.invalidToken.rawValue)
             completion(.failure(MpesaError.invalidToken))
             return
@@ -75,10 +84,20 @@ public class MpesaRepository: MpesaService {
         // Set request type
         request.httpMethod = "POST"
         
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        networkManager.makeRequest(with: request, decode: PaymentResponse.self, completionHandler: { response in
+                switch response {
+                case let .success(paymentResponse):
+                    completion(.success(paymentResponse))
+                case let .failure(error):
+                    completion(.failure(error))
+                }
+            }
+        )
+        
+        /*let task = URLSession.shared.dataTask(with: request) { data, response, error in
             
             if let error = error {
-                NSLog(error.localizedDescription)
+                NSLog(error.rawValue)
                 completion(.failure(error))
                 return
             }
@@ -115,15 +134,15 @@ public class MpesaRepository: MpesaService {
                 }
             }
         }
-        task.resume()
+        task.resume()*/
     }
     
     /// Specify necessary headers
-    func getHeaders(authorization: String) -> [String: String] {
+    private func getHeaders(authorization: String) -> [String: String] {
         let headers = [
             "Content-Type" : "application/json",
             "Authorization": authorization,
-            "Origin"       : "developer.mpesa.vm.co.mz"
+            "Origin"       : "*"
         ]
         
         return headers
