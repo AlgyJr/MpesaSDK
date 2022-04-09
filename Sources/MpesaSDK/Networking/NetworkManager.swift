@@ -36,19 +36,19 @@ class NetworkManager {
         self.session = session
     }
     
-    func makeRequest<T: Decodable>(with urlRequest: URLRequest, decode decodable: T.Type, completionHandler: @escaping (Result<T, Error>) -> Void) {
+    func makeRequest<T: Decodable>(with urlRequest: URLRequest, decode decodable: T.Type, completionHandler: @escaping (Any?, Error?) -> Void) {
         session.loadData(with: urlRequest) { data, error in
             guard let data = data else {
-                completionHandler(.failure(error!))
+                completionHandler(nil, error!)
                 return
             }
             
             do {
                 let jsonDecoder = JSONDecoder()
                 let parsed = try jsonDecoder.decode(decodable, from: data)
-                completionHandler(.success(parsed))
+                completionHandler(parsed, nil)
             } catch {
-                completionHandler(.failure(error))
+                completionHandler(data, error)
             }
         }
     }

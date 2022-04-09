@@ -54,7 +54,7 @@ public class MpesaManager: MpesaService {
         
         // Create URL
         guard let url = URL(string: "https://\(apiAddress):18352/ipg/v1x/c2bPayment/singleStage/") else {
-            NSLog(MpesaError.invalidURL.rawValue)
+            NSLog(MpesaError.invalidURL.localizedDescription)
             completion(.failure(MpesaError.invalidURL))
             return
         }
@@ -63,7 +63,7 @@ public class MpesaManager: MpesaService {
         
         // Generate token
         guard let token = try? keyGenerator.generateBearerToken(publicKey: config.publicKey, apiKey: config.apiKey) else {
-            NSLog(MpesaError.invalidToken.rawValue)
+            NSLog(MpesaError.invalidToken.localizedDescription)
             completion(.failure(MpesaError.invalidToken))
             return
         }
@@ -74,7 +74,7 @@ public class MpesaManager: MpesaService {
         
         // Specify the body
         guard let data = try? JSONEncoder().encode(paymentRequest) else {
-            NSLog(MpesaError.unableToEncode.rawValue)
+            NSLog(MpesaError.unableToEncode.localizedDescription)
             completion(.failure(MpesaError.unableToEncode))
             return
         }
@@ -84,57 +84,35 @@ public class MpesaManager: MpesaService {
         // Set request type
         request.httpMethod = "POST"
         
-        networkManager.makeRequest(with: request, decode: PaymentResponse.self, completionHandler: { response in
-                switch response {
-                case let .success(paymentResponse):
-                    completion(.success(paymentResponse))
-                case let .failure(error):
+        networkManager.makeRequest(with: request, decode: PaymentResponse.self, completionHandler: { data, error in
+            if let data = data as? Data, let error = error {
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        if let outputError = json["output_error"] as? String {
+                            NSLog(outputError)
+                            completion(.failure(MpesaError.outputError(outputError)))
+                        } else {
+                            NSLog(error.localizedDescription)
+                            completion(.failure(error))
+                        }
+                        return
+                    }
+                } catch {
                     completion(.failure(error))
+                    return
                 }
             }
-        )
-        
-        /*let task = URLSession.shared.dataTask(with: request) { data, response, error in
             
             if let error = error {
-                NSLog(error.rawValue)
                 completion(.failure(error))
                 return
             }
             
-            guard let data = data else {
-                NSLog(MpesaError.missingData.rawValue)
-                completion(.failure(MpesaError.missingData))
+            if let data = data {
+                completion(.success(data as! PaymentResponse))
                 return
             }
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                NSLog(MpesaError.missingData.rawValue)
-                completion(.failure(MpesaError.missingData))
-                return
-            }
-            
-            do {
-                // Parse the JSON data
-                let res = try JSONDecoder().decode(PaymentResponse.self, from: data)
-                completion(.success(res))
-            } catch {
-                do {
-                    let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                    
-                    if let outputError = json?["output_error"] as? String {
-                        NSLog(outputError)
-                    } else {
-                        NSLog(error.localizedDescription)
-                    }
-                    
-                    completion(.failure(error))
-                } catch {
-                    completion(.failure(error))
-                }
-            }
-        }
-        task.resume()*/
+        })
     }
     
     /// Specify necessary headers

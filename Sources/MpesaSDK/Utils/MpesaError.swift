@@ -29,12 +29,27 @@
 
 import Foundation
 
-public enum MpesaError: String, Error {
-    case invalidApiAddress = "Invalid API Address"
-    case invalidURL        = "Invalid URL"
-    case invalidToken      = "API Key or Public Key invalid"
-    case missingData       = "The data couldn't be read because it is missing"
-    case unableToEncode    = "Unable to encode payment request to JSON"
-    case outputError       = "An error occurred on request"
-    case unknownError      = ""
+public enum MpesaError: Error {
+    case invalidApiAddress
+    case invalidURL
+    case invalidToken
+    case unableToEncode
+    case outputError(String)
+}
+
+extension MpesaError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .invalidApiAddress:
+            return NSLocalizedString("Invalid API Address", comment: "")
+        case .invalidURL:
+            return NSLocalizedString("Invalid URL", comment: "")
+        case .invalidToken:
+            return NSLocalizedString("Bad API Key or Public Key", comment: "")
+        case .unableToEncode:
+            return NSLocalizedString("Unable to encode payment request to JSON", comment: "")
+        case .outputError(let output):
+            return NSLocalizedString("Failed to process payment: \(output)", comment: "")
+        }
+    }
 }
