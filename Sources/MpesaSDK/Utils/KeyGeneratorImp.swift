@@ -31,8 +31,10 @@ import Foundation
 
 /// Generates diferent keys as Bearer Token from Public Key and API Key
 class KeyGeneratorImp: KeyGenerator {
-    func generateBearerToken(publicKey: String, apiKey: String) throws -> String {
-        let rsaPublicKey = RSAPublicKey(pemEncoded: publicKey)
+    func generateBearerToken(publicKey: String, apiKey: String) throws -> String? {
+        guard let rsaPublicKey = RSAPublicKey(pemEncoded: publicKey) else {
+            return nil
+        }
         
         let token = RSAHelper.encrypt(apiKey: apiKey, publicKey: rsaPublicKey)
         return "Bearer \(token)"

@@ -28,5 +28,5 @@
 //
 
 protocol KeyGenerator {
-    func generateBearerToken(publicKey: String, apiKey: String) throws -> String
+    func generateBearerToken(publicKey: String, apiKey: String) throws -> String?
 }

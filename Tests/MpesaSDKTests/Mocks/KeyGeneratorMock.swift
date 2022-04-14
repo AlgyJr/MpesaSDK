@@ -33,7 +33,7 @@ import Foundation
 class KeyGeneratorMock: KeyGenerator {
     private(set) var token: String?
     
-    func generateBearerToken(publicKey: String, apiKey: String) throws -> String {
+    func generateBearerToken(publicKey: String, apiKey: String) throws -> String? {
         return "Bearer \(token ?? "")"
     }
 }

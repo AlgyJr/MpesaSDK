@@ -41,7 +41,7 @@ internal class RSAHelper {
         
         let data = Data(apiKey.utf8)
         
-        let encryptedData = SecKeyCreateEncryptedData(publicKey.key, .rsaEncryptionPKCS1, data as CFData, &error)! as Data
+        let encryptedData = SecKeyCreateEncryptedData(publicKey.key!, .rsaEncryptionPKCS1, data as CFData, &error)! as Data
         
         return encryptedData.base64EncodedString()
     }
