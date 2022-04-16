@@ -43,7 +43,7 @@ public struct PaymentResponse: Decodable {
     public let conversactionID    : String?
     public let thirdPartyReference: String
     
-    public init(responseCode: String, responseDesc: String, transactionID: String?, conversactionID: String?, thirdPartyReference: String) {
+    init(responseCode: String, responseDesc: String, transactionID: String?, conversactionID: String?, thirdPartyReference: String) {
         self.responseCode        = responseCode
         self.responseDesc        = responseDesc
         self.transactionID       = transactionID

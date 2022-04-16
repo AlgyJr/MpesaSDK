@@ -50,27 +50,14 @@ public class MpesaManager: MpesaService {
     /// - Parameters:
     ///     - paymentRequest: transaction payment request object
     public func c2bPayment(paymentRequest: PaymentRequest, completion: @escaping (Result<PaymentResponse, Error>) -> Void) {
-        let apiAddress = config.apiAddress
-        
         // Create URL
-        guard let url = URL(string: "https://\(apiAddress):18352/ipg/v1x/c2bPayment/singleStage/") else {
+        guard let url = URL(string: "https://\(config.apiAddress):18352/ipg/v1x/c2bPayment/singleStage/") else {
             NSLog(MpesaError.invalidURL.localizedDescription)
             completion(.failure(MpesaError.invalidURL))
             return
         }
         
         var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 90)
-        
-        // Generate token
-        guard let token = try? keyGenerator.generateBearerToken(publicKey: config.publicKey, apiKey: config.apiKey) else {
-            NSLog(MpesaError.invalidToken.localizedDescription)
-            completion(.failure(MpesaError.invalidToken))
-            return
-        }
-        
-        // Specify the headers
-        let headers = getHeaders(authorization: token)
-        request.allHTTPHeaderFields = headers
         
         // Specify the body
         guard let data = try? JSONEncoder().encode(paymentRequest) else {
@@ -84,32 +71,90 @@ public class MpesaManager: MpesaService {
         // Set request type
         request.httpMethod = "POST"
         
+        buildRequest(request: &request, data: data, completion: { data, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            completion(.success(data as! PaymentResponse))
+            return
+        })
+    }
+    
+    /// The B2C API Call is used as standard business-to-customer transaction. Funds from the business' mobile money wallet will be deducted and transferred to the mobile money wallet of the third party customer.
+    /// - Parameters:
+    ///     - paymentRequest: transaction payment request object
+    public func b2cPayment(paymentRequest: PaymentRequest, completion: @escaping (Result<PaymentResponse, Error>) -> Void) {
+        // Create URL
+        guard let url = URL(string: "https://\(config.apiAddress):18352/ipg/v1x/b2cPayment/") else {
+            NSLog(MpesaError.invalidURL.localizedDescription)
+            completion(.failure(MpesaError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 90)
+        
+        // Specify the body
+        guard let data = try? JSONEncoder().encode(paymentRequest) else {
+            NSLog(MpesaError.unableToEncode.localizedDescription)
+            completion(.failure(MpesaError.unableToEncode))
+            return
+        }
+        
+        request.httpBody = data
+        
+        // Set request type
+        request.httpMethod = "POST"
+        
+        buildRequest(request: &request, data: data, completion: { data, error in
+            if let error = error {
+                completion(.failure(error))
+            }
+            
+            completion(.success(data as! PaymentResponse))
+        })
+    }
+    
+    // MARK: Functions
+    func buildRequest(request: inout URLRequest, data: Data, completion: @escaping (Any?, Error?) -> Void) {
+        // Generate token
+        guard let token = try? keyGenerator.generateBearerToken(publicKey: config.publicKey, apiKey: config.apiKey) else {
+            NSLog(MpesaError.invalidToken.localizedDescription)
+            completion(nil, MpesaError.invalidToken)
+            return
+        }
+        
+        // Specify the headers
+        let headers = getHeaders(authorization: token)
+        request.allHTTPHeaderFields = headers
+        
         networkManager.makeRequest(with: request, decode: PaymentResponse.self, completionHandler: { data, error in
             if let data = data as? Data, let error = error {
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                         if let outputError = json["output_error"] as? String {
                             NSLog(outputError)
-                            completion(.failure(MpesaError.outputError(outputError)))
+                            completion(nil, MpesaError.outputError(outputError))
                         } else {
                             NSLog(error.localizedDescription)
-                            completion(.failure(error))
+                            completion(nil, error)
                         }
                         return
                     }
                 } catch {
-                    completion(.failure(error))
+                    completion(nil, error)
                     return
                 }
             }
             
             if let error = error {
-                completion(.failure(error))
+                completion(nil, error)
                 return
             }
             
             if let data = data {
-                completion(.success(data as! PaymentResponse))
+                completion(data, nil)
                 return
             }
         })
