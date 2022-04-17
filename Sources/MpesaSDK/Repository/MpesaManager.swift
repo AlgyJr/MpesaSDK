@@ -117,7 +117,7 @@ public class MpesaManager: MpesaService {
     }
     
     // MARK: Functions
-    func buildRequest(request: inout URLRequest, data: Data, completion: @escaping (Any?, Error?) -> Void) {
+    private func buildRequest(request: inout URLRequest, data: Data, completion: @escaping (Any?, Error?) -> Void) {
         // Generate token
         guard let token = try? keyGenerator.generateBearerToken(publicKey: config.publicKey, apiKey: config.apiKey) else {
             NSLog(MpesaError.invalidToken.localizedDescription)
