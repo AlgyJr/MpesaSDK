@@ -30,6 +30,6 @@ let package = Package(
         .testTarget(
             name: "MpesaSDKTests",
             dependencies: ["MpesaSDK"],
-            resources: [.process("Fixtures/c2b_fixture.json", localization: nil), .process("Fixtures/output_error_fixture.json", localization: nil)]),
+            resources: [.process("Fixtures/c2b_fixture.json", localization: nil), .process("Fixtures/b2c_fixture.json", localization: nil), .process("Fixtures/output_error_fixture.json", localization: nil)]),
     ]
 )
