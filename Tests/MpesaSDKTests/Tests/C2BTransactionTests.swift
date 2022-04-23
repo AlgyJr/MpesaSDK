@@ -38,7 +38,7 @@ class C2BTransactionTests: XCTestCase {
         let paymentRequest = PaymentRequest(
             transactionReference: "T25315D",
             customerMSISDN: "258849022333",
-            amount: "500",
+            amount: 500,
             thirdPartyReference: "11155",
             serviceProviderCode: "171717"
         )

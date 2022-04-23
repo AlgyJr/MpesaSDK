@@ -43,10 +43,10 @@ public struct PaymentRequest: Encodable {
     public let thirdPartyReference : String
     public let serviceProviderCode : String
     
-    public init(transactionReference: String, customerMSISDN: String, amount: String, thirdPartyReference : String, serviceProviderCode : String) {
+    public init(transactionReference: String, customerMSISDN: String, amount: Double, thirdPartyReference : String, serviceProviderCode : String) {
         self.transactionReference = transactionReference
-        self.customerMSISDN       = customerMSISDN
-        self.amount               = amount
+        self.customerMSISDN       = PhoneNumberHelper.formatPhoneNumber(customerMSISDN)
+        self.amount               = String(amount)
         self.thirdPartyReference  = thirdPartyReference
         self.serviceProviderCode  = serviceProviderCode
     }
