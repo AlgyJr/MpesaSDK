@@ -71,7 +71,7 @@ public class MpesaManager: MpesaService {
         // Set request type
         request.httpMethod = "POST"
         
-        buildRequest(request: &request, data: data, completion: { data, error in
+        buildRequest(request: &request, data: data, decode: PaymentResponse.self, completion: { data, error in
             if let error = error {
                 completion(.failure(error))
                 return
@@ -107,7 +107,7 @@ public class MpesaManager: MpesaService {
         // Set request type
         request.httpMethod = "POST"
         
-        buildRequest(request: &request, data: data, completion: { data, error in
+        buildRequest(request: &request, data: data, decode: PaymentResponse.self, completion: { data, error in
             if let error = error {
                 completion(.failure(error))
             }
@@ -117,7 +117,7 @@ public class MpesaManager: MpesaService {
     }
     
     // MARK: Functions
-    private func buildRequest(request: inout URLRequest, data: Data, completion: @escaping (Any?, Error?) -> Void) {
+    private func buildRequest<T: Decodable>(request: inout URLRequest, data: Data, decode decodable: T.Type, completion: @escaping (Any?, Error?) -> Void) {
         // Generate token
         guard let token = try? keyGenerator.generateBearerToken(publicKey: config.publicKey, apiKey: config.apiKey) else {
             NSLog(MpesaError.invalidToken.localizedDescription)
@@ -129,7 +129,7 @@ public class MpesaManager: MpesaService {
         let headers = getHeaders(authorization: token)
         request.allHTTPHeaderFields = headers
         
-        networkManager.makeRequest(with: request, decode: PaymentResponse.self, completionHandler: { data, error in
+        networkManager.makeRequest(with: request, decode: decodable, completionHandler: { data, error in
             if let data = data as? Data, let error = error {
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
