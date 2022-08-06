@@ -25,7 +25,7 @@ PS: You can get these keys getting an account on the Vodacom Mozambique M-Pesa [
 Add a Swift package to your project:
 
 1. on Xcode, go to File -> Add Packages...
-2. paste the package repository URL (https://github.com/Algy-Jr12/MpesaSDK) into Search Bar
+2. paste the package repository URL (https://github.com/AlgyJr/MpesaSDK) into Search Bar
 3. Next next next :) and enjoy
 
 Supported versions:
